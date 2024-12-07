@@ -154,13 +154,3 @@ Create a new employee.
   }
 }
 ```
-
----
-
-## **Quick Steps with Postman**
-1. Use **GET** or **POST** method.  
-2. Go to the **Authorization** tab, select **Basic Auth**, and provide the email and password.  
-3. For **POST**, add the JSON body in the **Body** tab.  
-4. Click **Send** to test the API.
-
---- 
