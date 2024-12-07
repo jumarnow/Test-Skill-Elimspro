@@ -93,11 +93,6 @@ Create a new company.
 ## **3. GET `/api/employees`**
 Retrieve the list of employees, including their company details.
 
-### **Headers**  
-```plaintext
-Authorization: Basic YWRtaW5AYWRtaW4uY29tOnBhc3N3b3Jk
-```
-
 ### **Response Example**  
 ```json
 {
@@ -131,12 +126,6 @@ Authorization: Basic YWRtaW5AYWRtaW4uY29tOnBhc3N3b3Jk
 
 ## **4. POST `/api/employees`**
 Create a new employee.
-
-### **Headers**  
-```plaintext
-Authorization: Basic YWRtaW5AYWRtaW4uY29tOnBhc3N3b3Jk  
-Content-Type: application/json
-```
 
 ### **Request Body**  
 ```json
