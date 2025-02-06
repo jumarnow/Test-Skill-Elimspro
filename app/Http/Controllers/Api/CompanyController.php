@@ -8,7 +8,19 @@ use App\Http\Controllers\Controller;
 
 class CompanyController extends Controller
 {
-    public function index() {
+
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (auth()->user()->role !== 'direktur') {
+                return response()->json(['error' => 'Unauthorized access'], 403);
+            }
+            return $next($request);
+        })->only(['store']);
+    }
+
+    public function index()
+    {
         $companies = Company::all();
         $dataCount = $companies->count();
 

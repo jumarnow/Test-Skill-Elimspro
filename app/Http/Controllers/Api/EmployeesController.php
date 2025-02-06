@@ -8,6 +8,17 @@ use App\Http\Controllers\Controller;
 
 class EmployeesController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (auth()->user()->role !== 'direktur' && auth()->user()->role !== 'manager') {
+                return response()->json(['error' => 'Unauthorized access'], 403);
+            }
+            return $next($request);
+        })->only(['store']);
+    }
+
     public function index() {
         $employees = Employees::with('company')->get();
         $dataCount = $employees->count();

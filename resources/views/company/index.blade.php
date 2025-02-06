@@ -3,8 +3,10 @@
     <section class="content-header">
         <h1>
             Company
+            @if (Auth::user()->role == 'direktur')
             <a href="{{ route('company.create') }}" id="" class="btn btn-sm btn-success" title="Tambah Data"><i
                     class="fa fa-plus-circle"></i> Tambah Data</a>
+            @endif
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ url('/') }}"><i class="fa fa-dashboard"></i> Halaman Awal</a></li>

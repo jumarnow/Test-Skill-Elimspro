@@ -17,8 +17,21 @@ class DatabaseSeeder extends Seeder
     {
         // $this->call(UsersTableSeeder::class);
         User::create([
-            'name' => 'Admin',
-            'email' => 'admin@admin.com',
+            'name' => 'Direktur',
+            'email' => 'direktur@direktur.com',
+            'role' => 'direktur',
+            'password' => bcrypt('password')
+        ]);
+        User::create([
+            'name' => 'Manager',
+            'email' => 'manager@manager.com',
+            'role' => 'manager',
+            'password' => bcrypt('password')
+        ]);
+        User::create([
+            'name' => 'Karyawan',
+            'email' => 'karyawan@karyawan.com',
+            'role' => 'karyawan',
             'password' => bcrypt('password')
         ]);
 
