@@ -13,6 +13,18 @@ class CompanyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+public function __construct()
+{
+    $this->middleware('auth');
+    $this->middleware(function ($request, $next) {
+        if (auth()->user()->role !== 'direktur') {
+            return redirect()->route('company.index')->with('error', 'Unauthorized access');
+        }
+        return $next($request);
+    })->only(['create', 'edit', 'destroy']);
+}
+
     public function index()
     {
         return view('company.index');
@@ -25,12 +37,17 @@ class CompanyController extends Controller
             return DataTables::of($companies)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
-                    $actionBtn = '
-                        <div class="btn-group">
-                            <a href="' . url('company', $row->id) .'/edit' . '" class="btn btn-xs btn-warning"><i class="fa fa-pencil"></i></a>
-                            <button type="button" class="btn_delete_modal_href btn btn-xs btn-danger" data-url_modal="' . url('company', $row->id) . '"><i class="fa fa-trash"></i></button>
-                        </div>
-                    ';
+                    if (auth()->user()->role === 'direktur') {
+                        $actionBtn = '
+                            <div class="btn-group">
+                                <a href="' . url('company', $row->id) .'/edit' . '" class="btn btn-xs btn-warning"><i class="fa fa-pencil"></i></a>
+                                <button type="button" class="btn_delete_modal_href btn btn-xs btn-danger" data-url_modal="' . url('company', $row->id) . '"><i class="fa fa-trash"></i></button>
+                            </div>
+                        ';
+                    } else {
+                        $actionBtn = '
+                        ';
+                    }
                     return $actionBtn;
                 })
                 ->rawColumns(['action'])

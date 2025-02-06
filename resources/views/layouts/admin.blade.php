@@ -132,7 +132,7 @@
                     </div>
                     <div class="pull-left info">
                         <p>{{ Auth::user()->name }}</p>
-                        <a href="#">{{ Auth::user()->level ? null : null }}</a>
+                        Role : <a href="#">{{ Auth::user()->role ? Auth::user()->role : null }}</a>
                     </div>
                 </div>
 

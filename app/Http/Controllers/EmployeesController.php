@@ -14,6 +14,15 @@ class EmployeesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (auth()->user()->role !== 'direktur' && auth()->user()->role !== 'manager') {
+                return redirect()->route('employees.index')->with('error', 'Unauthorized access');
+            }
+            return $next($request);
+        })->only(['create', 'edit', 'destroy']);
+    }
     public function index()
     {
         return view('employees.index');
@@ -22,32 +31,36 @@ class EmployeesController extends Controller
     public function data(Request $request)
     {
         // if ($request->ajax()) {
-            $employees = Employees::all();
-            $formattedEmployees = $employees->map(function ($employee) {
-                // dd($employee);
-                return [
-                    'id' => $employee->id,
-                    'first_nm' => $employee->first_nm,
-                    'last_nm' => $employee->last_nm,
-                    'company' => $employee->company->name,
-                    'email' => $employee->email,
-                    'phone' => $employee->phone
-                ];
-            });
-            // dd($formattedEmployees);
-            return DataTables::of($formattedEmployees)
-                ->addIndexColumn()
-                ->addColumn('action', function($row){
+        $employees = Employees::all();
+        $formattedEmployees = $employees->map(function ($employee) {
+            // dd($employee);
+            return [
+                'id' => $employee->id,
+                'first_nm' => $employee->first_nm,
+                'last_nm' => $employee->last_nm,
+                'company' => $employee->company->name,
+                'email' => $employee->email,
+                'phone' => $employee->phone
+            ];
+        });
+        // dd($formattedEmployees);
+        return DataTables::of($formattedEmployees)
+            ->addIndexColumn()
+            ->addColumn('action', function ($row) {
+                if (auth()->user()->role === 'direktur' || auth()->user()->role === 'manager') {
                     $actionBtn = '
-                        <div class="btn-group">
-                            <a href="' . url('employees', $row['id']) .'/edit' . '" class="btn btn-xs btn-warning"><i class="fa fa-pencil"></i></a>
-                            <button type="button" class="btn_delete_modal_href btn btn-xs btn-danger" data-url_modal="' . url('employees', $row['id']) . '"><i class="fa fa-trash"></i></button>
-                        </div>
-                    ';
-                    return $actionBtn;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
+                            <div class="btn-group">
+                                <a href="' . url('employees', $row['id']) . '/edit' . '" class="btn btn-xs btn-warning"><i class="fa fa-pencil"></i></a>
+                                <button type="button" class="btn_delete_modal_href btn btn-xs btn-danger" data-url_modal="' . url('employees', $row['id']) . '"><i class="fa fa-trash"></i></button>
+                            </div>
+                        ';
+                } else {
+                    $actionBtn = '';
+                }
+                return $actionBtn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
         // }
     }
 
@@ -82,7 +95,7 @@ class EmployeesController extends Controller
 
         if ($request->action == "Simpan & Buat Lagi") {
             return redirect()->route('employees.create')->with('success', 'Data Berhasil Disimpan');
-        }else{
+        } else {
             return redirect()->route('employees.index')->with('success', 'Data Berhasil Disimpan');
         }
     }
